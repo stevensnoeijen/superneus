@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#7b2fa8" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2714%27 fill=%27%237d2fa6%27 stroke=%27%23111%27 stroke-width=%273%27/%3E%3Cpath d=%27M16 7 L22 21 Q16 25 10 21 Z%27 fill=%27%23f5b81c%27 stroke=%27%23111%27 stroke-width=%272%27/%3E%3C/svg%3E" />
+  <title>Superneus vs Potterpim</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #111; overscroll-behavior: none; }
+    #game { position: fixed; inset: 0; touch-action: none; user-select: none; -webkit-user-select: none; }
+    #app { position: fixed; inset: 0; z-index: 10; pointer-events: none; touch-action: none; }
+    /* Loading screen: inline so it paints before any JS/CSS bundle has loaded. */
+    #loader {
+      position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 22px; padding: 16px; box-sizing: border-box; color: #111;
+      background: #7d2fa6 radial-gradient(rgba(255,255,255,.16) 2px, transparent 2.5px) 0 0 / 14px 14px;
+      font: 900 16px "Luckiest Guy", "Impact", "Arial Black", sans-serif; text-transform: uppercase;
+      transition: opacity .35s ease;
+    }
+    #loader.done { opacity: 0; pointer-events: none; }
+    #loader .burst {
+      background: #ffc72c; border: 4px solid #111; box-shadow: 6px 6px 0 #111; padding: 14px 26px;
+      transform: rotate(-4deg); text-align: center; line-height: 1;
+    }
+    #loader .burst small { display: block; font-size: 14px; letter-spacing: .04em; color: #7d2fa6; }
+    #loader .burst b { display: block; font-size: clamp(34px, 9vw, 64px); color: #f59a17;
+      -webkit-text-stroke: 2px #1a2f66; text-shadow: 3px 3px 0 #2f6cc4, 5px 5px 0 #1a2f66; }
+    #loader .bar { width: min(320px, 80vw); height: 22px; background: #fff; border: 4px solid #111;
+      box-shadow: 4px 4px 0 #111; transform: rotate(1deg); overflow: hidden; }
+    #loader .fill { height: 100%; width: 0; transition: width .2s ease;
+      background: #ff3d9a repeating-linear-gradient(-45deg, transparent 0 8px, rgba(255,255,255,.35) 8px 16px); }
+    #loader .label { color: #fff; font-size: 15px; letter-spacing: .05em; text-shadow: 2px 2px 0 #111; min-height: 1.2em; }
+    #loader .nose { animation: sniff .7s ease-in-out infinite alternate; }
+    @keyframes sniff { to { transform: scale(1.25) rotate(8deg); } }
+    @media (prefers-reduced-motion: reduce) { #loader .nose { animation: none; } }
+  </style>
+</head>
+<body>
+  <div id="loader" role="status" aria-live="polite">
+    <div class="burst"><small>De avonturen van</small><b>SUPER NEUS</b></div>
+    <svg class="nose" viewBox="0 0 40 40" width="56" height="56" aria-hidden="true"><path d="M17 4 C20 12 30 22 31 28 C32 33 27 35 23 33 C21 36 15 36 13 33 C9 34 7 30 10 27 C13 23 15 14 17 4 Z" fill="#ffc72c" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="17" cy="31" rx="2.2" ry="1.3" fill="#111"/><ellipse cx="25" cy="31" rx="2.2" ry="1.3" fill="#111"/></svg>
+    <div class="bar"><div class="fill"></div></div>
+    <div class="label">Laden…</div>
+  </div>
+  <div id="game"></div>
+  <div id="app"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
