@@ -80,6 +80,10 @@ Change the contract first, then the modules on both sides.
 - Keep code in plain JS (no TypeScript, no frameworks). Match the existing style.
 
 ## Git workflow
+- **Always work on a new branch** when implementing changes (branch off `main`, e.g.
+  `feat/<topic>`, `fix/<topic>`); never commit implementation work directly to `main`.
+- When all implementation is done (build + tests green), push the branch and **open a pull
+  request** to `main` (`gh pr create`) with a summary of the changes.
 - Work in small, atomic commits: one logical change per commit, each leaving the
   build working. Don't bundle unrelated changes.
 - **Never push to `main` without the user's explicit approval**, every time; an
@@ -98,7 +102,7 @@ always gets the newest deploy when online, the cached copy when offline / after 
 page is open, `src/app/useUpdateCheck.ts` polls `version.json` (every minute, on tab focus, on
 reconnect); a newer version shows the "NIEUWE VERSIE!" banner — on the start page and the K.O.
 screen only, **never during play**. `dist/` = `index.html` + `sw.js` + `version.json`.
-`.github/workflows/pr-checks.yml` runs typecheck, lint, unit tests and a build on every pull
+`.github/workflows/pr.yml` runs typecheck, lint, unit tests and a build on every pull
 request; keep it green before asking to merge.
 `.github/workflows/deploy.yml` builds and publishes `dist/` to GitHub Pages on every
 push to `main` (Settings → Pages → Source: "GitHub Actions"). Keep `base: './'` in
