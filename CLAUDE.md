@@ -86,8 +86,9 @@ Change the contract first, then the modules on both sides.
   request** to `main` (`gh pr create`) with a summary of the changes.
 - Work in small, atomic commits: one logical change per commit, each leaving the
   build working. Don't bundle unrelated changes.
-- **Never push to `main` without the user's explicit approval**, every time; an
-  earlier approval doesn't carry over. Committing locally is fine.
+- `main` is protected: direct commits/pushes to it are blocked on GitHub. Every change
+  reaches `main` through a pull request; merge only with the user's explicit approval,
+  every time (an earlier approval doesn't carry over).
 
 ## Verifying changes
 Run `npm run build` (must succeed) and `npm run dev`, then play a full match:
