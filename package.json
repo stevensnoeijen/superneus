@@ -1,0 +1,40 @@
+{
+  "name": "superneus",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "npm run check && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p .",
+    "lint": "oxlint",
+    "check": "npm run typecheck && npm run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@fontsource/luckiest-guy": "^5.3.0",
+    "miniplex": "^2.0.0",
+    "pixi-dragonbones-runtime": "^8.0.3",
+    "pixi.js": "^8.6.0",
+    "preact": "^11.0.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/preact": "^3.2.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.3",
+    "jsdom": "^30.1.2",
+    "oxlint": "^1.87.0",
+    "terser": "^5.51.2",
+    "typescript": "^7.0.2",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vitest": "^5.0.3"
+  }
+}
