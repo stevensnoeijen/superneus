@@ -1,5 +1,6 @@
 import { createMatch, giveKnife, updateMatch, type Match } from '../ecs/index';
 import { createCheatCode } from '../cheats';
+import { breadcrumb } from '../monitoring/sentry';
 import type { Engine } from '../engine/index';
 import type { Audio } from '../audio/index';
 import type { FighterId, GameEvent, MoveAnim } from '../types';
@@ -86,6 +87,7 @@ export class GameController {
   }
 
   startMatch(): void {
+    breadcrumb('game', 'match start');
     this.match = createMatch();
     if (this.knifeUnlocked) giveKnife(this.match);
     this.phase = 'intro';
@@ -111,11 +113,13 @@ export class GameController {
     if (paused) this.audio.music.stop();
     else this.audio.music.start();
     this.setState({ paused });
+    breadcrumb('game', paused ? 'pause' : 'resume');
   }
 
   private unlockKnife(): void {
     if (!giveKnife(this.match)) return;
     this.knifeUnlocked = true;
+    breadcrumb('game', 'knife cheat');
     this.audio.knife();
     this.engine.flash();
     this.engine.shake(6);
@@ -191,6 +195,7 @@ export class GameController {
           break;
         case 'ko':
           this.phase = 'over';
+          breadcrumb('game', 'K.O.');
           this.overTimer = KO_PAUSE_SECONDS;
           engine.flash();
           engine.shake(18);

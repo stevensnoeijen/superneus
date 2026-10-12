@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,6 +27,27 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Read app version
+        id: version
+        run: echo "version=$(node -p "require('./dist/version.json').version")" >> "$GITHUB_OUTPUT"
+      # Readable stack traces in Sentry: upload the (hidden) source map for the inlined
+      # script, built by inlineSourceMap() in vite.config.js. Release = __APP_VERSION__.
+      - name: Upload source maps to Sentry
+        if: env.SENTRY_AUTH_TOKEN != ''
+        uses: getsentry/action-release@v3
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        with:
+          release: ${{ steps.version.outputs.version }}
+          environment: prod
+          sourcemaps: dist
+          url_prefix: 'app:///'
+          inject: false # debug IDs only fit separate .js files; frames are rewritten in beforeSend
+          set_commits: skip
+      # Source maps are never public.
+      - run: rm -f dist/*.map
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

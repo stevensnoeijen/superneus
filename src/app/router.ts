@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { breadcrumb } from '../monitoring/sentry';
 
 /** Hash routes: they work on GitHub Pages and in the single-file build without a server. */
 export type Route = 'start' | 'fight';
@@ -26,6 +27,7 @@ export function useRoute(): Route {
   useEffect(() => {
     const onHash = () => {
       const next = parseRoute(location.hash);
+      breadcrumb('navigation', `route ${next}`);
       const doc = document as ViewTransitionDoc;
       const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (doc.startViewTransition && !reduce) doc.startViewTransition(() => flushSync(() => setRoute(next)));
