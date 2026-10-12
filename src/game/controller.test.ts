@@ -92,6 +92,36 @@ describe('GameController', () => {
     expect(game.match.weaponOf('superneus')).toBe('knife');
   });
 
+  it('the cheat code can be entered from the pause menu (it stays paused)', () => {
+    const { game, input, audio, run } = setup();
+    game.enter();
+    run(2);
+    game.pressStart();
+    expect(game.getState().paused).toBe(true);
+    for (const k of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyK', 'KeyJ']) {
+      input.keyDown(k);
+      input.keyUp(k);
+    }
+    game.pressStart();
+    expect(game.getState().paused).toBe(true);
+    expect(game.match.weaponOf('superneus')).toBe('knife');
+    expect(audio.knife).toHaveBeenCalled();
+    // the next START resumes as usual
+    game.pressStart();
+    expect(game.getState().paused).toBe(false);
+  });
+
+  it('a wrong code in the pause menu just resumes on START', () => {
+    const { game, input, run } = setup();
+    game.enter();
+    run(2);
+    game.pressStart();
+    for (const k of ['ArrowUp', 'ArrowDown', 'KeyK']) { input.keyDown(k); input.keyUp(k); }
+    game.pressStart();
+    expect(game.getState().paused).toBe(false);
+    expect(game.match.weaponOf('superneus')).not.toBe('knife');
+  });
+
   it('leave stops music and the ticker and resets the screen state', () => {
     const { game, engine, audio } = setup();
     game.enter();

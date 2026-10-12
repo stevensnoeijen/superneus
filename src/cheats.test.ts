@@ -46,4 +46,13 @@ describe('cheat code', () => {
     const t = enter(cheat, ['up', 'up', 'up', ...SEQ.slice(1)]);
     expect(cheat.start(t)).toBe(true);
   });
+
+  it('works after a START that opened the pause menu', () => {
+    const onUnlock = vi.fn();
+    const cheat = createCheatCode(onUnlock);
+    expect(cheat.start(0)).toBe(false); // pause
+    const t = enter(cheat, SEQ, 100);
+    expect(cheat.start(t)).toBe(true);
+    expect(onUnlock).toHaveBeenCalledOnce();
+  });
 });
