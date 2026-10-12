@@ -29,12 +29,12 @@ describe('initSentry', () => {
     expect(Sentry.init).not.toHaveBeenCalled();
   });
 
-  it('initialises the deployed build as prod with the app version as release and no PII', () => {
+  it('initialises the deployed build as prod with the git commit as release and no PII', () => {
     expect(initSentry({ mode: 'production', dsn: 'https://k@example.ingest.sentry.io/1', hostname: 'stevensnoeijen.github.io' })).toBe(true);
     const opts = vi.mocked(Sentry.init).mock.calls[0]![0]!;
     expect(opts).toMatchObject({
       dsn: 'https://k@example.ingest.sentry.io/1',
-      release: 'test-version',
+      release: 'test-sha',
       environment: 'prod',
       sampleRate: 1,
       dataCollection: { userInfo: false },

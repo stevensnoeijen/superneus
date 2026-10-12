@@ -71,13 +71,13 @@ export function initSentry(
   if (env.mode === 'test' || !dsn) return false;
   Sentry.init({
     dsn,
-    release: __APP_VERSION__,
+    release: __GIT_SHA__, // the commit shown bottom right on the start page
     environment: sentryEnvironment(env.mode, env.hostname),
     sampleRate: 1,
     dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false },
     beforeSend: (event) => filterEvent(event, location.href),
   });
-  Sentry.setTag('git', __GIT_SHA__);
+  Sentry.setTag('build', __APP_VERSION__); // content hash used by the update check
   return true;
 }
 
