@@ -4,11 +4,6 @@ import { ControlsHelp } from '../components/ControlsHelp';
 import { UpdateBanner } from '../components/UpdateBanner';
 import { GIT_SHA } from '../../app/useUpdateCheck';
 
-// TEMP (issue #8): verifies Sentry error reporting + source maps. Revert this commit after.
-function throwSentryTest(): never {
-  throw new Error(`Sentry test error (${GIT_SHA})`);
-}
-
 /** Start page (#/): title, controls help and the FIGHT! button. */
 export function StartPage({ touch, onFight, updateAvailable = false }: { touch: boolean; onFight(): void; updateAvailable?: boolean }) {
   useEffect(() => {
@@ -31,7 +26,6 @@ export function StartPage({ touch, onFight, updateAvailable = false }: { touch: 
         <div className="sn-hint stroke">of druk op ENTER / SPATIE</div>
       </div>
       {updateAvailable && <UpdateBanner />}
-      <button type="button" className="sn-sentry-test" onClick={throwSentryTest}>TEST ERROR</button>
       <div className="sn-version">v·{GIT_SHA}</div>
     </div>
   );
