@@ -10,11 +10,10 @@ function KeyboardHelp() {
       <ul>
         <li><kbd>A</kbd><kbd>D</kbd> / <kbd>←</kbd><kbd>→</kbd> Lopen</li>
         <li><kbd>W</kbd> / <kbd>↑</kbd> Springen</li>
-        <li><kbd>S</kbd> / <kbd>↓</kbd> Bukken / blokken</li>
-        <li>Houd <b>achteruit</b> = blokken</li>
+        <li><kbd>S</kbd> / <kbd>↓</kbd> Bukken</li>
         <li><kbd>J</kbd> Punch &nbsp;<kbd>K</kbd> Kick</li>
         <li><kbd>L</kbd> Special: SNUIF! (meter vol)</li>
-        <li><kbd>I</kbd> Blokken (of houd achteruit)</li>
+        <li>Houd <kbd>I</kbd> Blokken (niet tegelijk met aanvallen)</li>
       </ul>
     </div>
   );
@@ -32,7 +31,7 @@ function TouchHelp() {
       </div>
       <ul className="pv-legend">
         <li><b>◀ ▶</b> lopen &nbsp;<b>▲</b> springen &nbsp;<b>▼</b> bukken</li>
-        <li><b>BLOK</b> of houd <b>achteruit</b> = blokken</li>
+        <li>Houd <b>BLOK</b> = blokken (niet tegelijk met aanvallen)</li>
         <li><b>SNUIF</b> gloeit als je meter vol is</li>
       </ul>
     </div>
