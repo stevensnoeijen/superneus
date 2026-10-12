@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fontsource/luckiest-guy": "^5.3.0",
+    "@sentry/browser": "^11.7.0",
     "miniplex": "^2.0.0",
     "pixi-dragonbones-runtime": "^8.0.3",
     "pixi.js": "^8.6.0",

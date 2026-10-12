@@ -10,11 +10,13 @@ const label = root?.querySelector<HTMLElement>('.label');
 const nextPaint = (): Promise<void> =>
   new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 
-export function createLoader(totalSteps: number) {
+/** `onStep` hears each step's label as it starts (error reports say where loading failed). */
+export function createLoader(totalSteps: number, onStep?: (text: string) => void) {
   let done = 0;
   return {
     /** Shows `text`, runs `work`, then advances the bar. */
     async step<T>(text: string, work: () => T | Promise<T>): Promise<T> {
+      onStep?.(text);
       if (label) label.textContent = text;
       await nextPaint();
       const out = await work();

@@ -10,19 +10,31 @@ import { App } from './app/App';
 import { perfInfo, perfMark } from './perf';
 import { createLoader } from './loader';
 import { registerServiceWorker } from './app/useUpdateCheck';
+import { detectTouch } from './app/useIsTouch';
+import { initSentry, reportError, setTags } from './monitoring/sentry';
+
+initSentry();
+
+/** Device context for error reports (the same data as the `?perf` overlay). */
+const deviceContext: Record<string, unknown> = { touch: detectTouch(), dpr: window.devicePixelRatio, step: 'start' };
+setTags({ touch: String(deviceContext.touch) });
 
 async function boot(): Promise<void> {
   const stage = document.getElementById('game');
   const appRoot = document.getElementById('app');
   if (!stage || !appRoot) throw new Error('#game / #app container missing');
   perfMark('boot start');
-  const loader = createLoader(3);
+  const loader = createLoader(3, (text) => { deviceContext.step = text; });
   // The title font is used by the menu, popups and Potterpim's flying words: load it first.
   await loader.step('Letters inkten…', () => document.fonts.load('40px "Luckiest Guy"').catch(() => []));
   const engine = await loader.step('Arena opbouwen…', () => createEngine(stage));
   perfMark('engine ready');
   await loader.step('Superneus en Potterpim tekenen…', () => engine.preloadFighters());
   perfMark('fighters ready');
+  deviceContext.renderer = engine.app.renderer.name;
+  deviceContext.resolution = engine.app.renderer.resolution;
+  deviceContext.canvas = `${engine.app.canvas.width}x${engine.app.canvas.height}`;
+  setTags({ renderer: engine.app.renderer.name });
   perfInfo('renderer', `${engine.app.renderer.name} @ ${engine.app.renderer.resolution}x (dpr ${window.devicePixelRatio})`);
   perfInfo('canvas', `${engine.app.canvas.width}x${engine.app.canvas.height} px`);
 
@@ -44,5 +56,5 @@ async function boot(): Promise<void> {
 
 void boot().catch((err: unknown) => {
   createLoader(1).fail(err);
-  throw err;
+  reportError(err, deviceContext);
 });
