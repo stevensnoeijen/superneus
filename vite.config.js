@@ -61,7 +61,7 @@ function versionFile() {
     name: 'version-file',
     apply: 'build',
     generateBundle() {
-      this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ version: APP_VERSION }) });
+      this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ version: APP_VERSION, release: GIT_SHA }) }); // release: Sentry (deploy workflow)
     },
   };
 }

@@ -24,7 +24,7 @@ reporting; that is accepted.
   overrides it at build time.
 - Source maps: the build writes a hidden `dist/index.html.map` for the inlined script
   (`inlineSourceMap()` in `vite.config.js`). The deploy workflow uploads it with
-  `getsentry/action-release` (release = the content-hash app version, `url_prefix`
+  `getsentry/action-release` (release = the build's git commit, as shown on the start page, `url_prefix`
   `app:///`) and deletes all `.map` files before publishing to GitHub Pages.
 - GitHub: secret `SENTRY_AUTH_TOKEN`, variables `SENTRY_ORG` and `SENTRY_PROJECT`.
   Without the token, the upload step is skipped.
