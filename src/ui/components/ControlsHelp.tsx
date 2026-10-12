@@ -38,3 +38,15 @@ function TouchHelp() {
     </div>
   );
 }
+
+/** Compact key legend shown in the corner during a desktop fight. */
+export function KeysMini() {
+  return (
+    <ul className="sn-keys-mini" aria-label="Besturing">
+      <li><kbd>WASD</kbd> / <kbd>←↑↓→</kbd> bewegen</li>
+      <li><kbd>J</kbd> punch <kbd>K</kbd> kick</li>
+      <li><kbd>L</kbd> SNUIF <kbd>I</kbd> blok</li>
+      <li><kbd>P</kbd> pauze</li>
+    </ul>
+  );
+}

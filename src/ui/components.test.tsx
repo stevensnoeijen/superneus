@@ -11,7 +11,7 @@ vi.hoisted(() => {
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import { createRef } from 'react';
 import { StartPage } from './pages/StartPage';
-import { ControlsHelp } from './components/ControlsHelp';
+import { ControlsHelp, KeysMini } from './components/ControlsHelp';
 import { GameOverModal } from './components/GameOverModal';
 import { PauseOverlay } from './components/PauseOverlay';
 import { Hud, type HudHandle } from './components/Hud';
@@ -34,6 +34,11 @@ describe('StartPage', () => {
 });
 
 describe('ControlsHelp', () => {
+  it('compact legend lists the attack keys', () => {
+    render(<KeysMini />);
+    expect(screen.getByLabelText('Besturing').textContent).toMatch(/J.*punch.*K.*kick/);
+  });
+
   it('keyboard list on desktop, button preview on touch', () => {
     const { container, rerender } = render(<ControlsHelp touch={false} />);
     expect(container.querySelector('kbd')).not.toBeNull();

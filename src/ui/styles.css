@@ -340,6 +340,14 @@
 @media (max-height: 420px) { .sn-paused-help { display: none; } }
 .sn-btn.small { font-size: clamp(22px, min(5vw, 6vh), 36px); padding: 4px 26px; }
 
+/* small key legend, bottom right during a desktop fight */
+.sn-keys-mini { position: absolute; right: 10px; bottom: 10px; margin: 0; padding: 6px 10px; list-style: none; pointer-events: none;
+  display: grid; gap: 3px; font-family: var(--font); font-size: 12px; text-transform: none; color: var(--ink);
+  background: rgba(255, 255, 255, .8); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); opacity: .85; }
+.sn-keys-mini kbd { display: inline-block; min-width: 1.4em; text-align: center; font-family: var(--font);
+  background: var(--yellow); border: 2px solid var(--ink); border-radius: 3px; padding: 0 3px; }
+@media (max-height: 420px), (max-width: 600px) { .sn-keys-mini { display: none; } }
+
 /* ---------- Pages + transitions ---------- */
 .sn-fx { position: absolute; inset: 0; pointer-events: none; }
 .sn-game { position: absolute; inset: 0; pointer-events: none; }
