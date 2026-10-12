@@ -5,7 +5,7 @@ import { preactAliases } from './vite.config.js';
 export default defineConfig({
   // test the same UI runtime that ships (Preact via the React-compatible API)
   resolve: { alias: preactAliases },
-  define: { __APP_VERSION__: JSON.stringify('test-version') },
+  define: { __APP_VERSION__: JSON.stringify('test-version'), __GIT_SHA__: JSON.stringify('test-sha') },
   test: {
     include: ['src/**/*.test.{ts,tsx}'],
     environment: 'node',

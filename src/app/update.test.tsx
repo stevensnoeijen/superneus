@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/preact';
-import { APP_VERSION, fetchDeployedVersion, useUpdateCheck } from './useUpdateCheck';
+import { APP_VERSION, GIT_SHA, fetchDeployedVersion, useUpdateCheck } from './useUpdateCheck';
 import { UpdateBanner } from '../ui/components/UpdateBanner';
 import { StartPage } from '../ui/pages/StartPage';
 
@@ -72,7 +72,7 @@ describe('UpdateBanner', () => {
   it('start page shows the banner only when an update is available, and the version', () => {
     const { rerender } = render(<StartPage touch={false} onFight={() => {}} />);
     expect(screen.queryByText('NIEUWE VERSIE!')).toBeNull();
-    expect(screen.getByText(`v·${APP_VERSION}`)).toBeTruthy();
+    expect(screen.getByText(`v·${GIT_SHA}`)).toBeTruthy();
     rerender(<StartPage touch={false} onFight={() => {}} updateAvailable />);
     expect(screen.getByText('NIEUWE VERSIE!')).toBeTruthy();
   });

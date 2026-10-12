@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 /** Version of the code that is running now (content hash, set at build time). */
 export const APP_VERSION: string = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev';
+/** Git commit shown to players; the update check keeps using the content hash so docs/CI commits don't trigger the banner. */
+export const GIT_SHA: string = typeof __GIT_SHA__ === 'string' ? __GIT_SHA__ : 'dev';
 
 const POLL_MS = 60_000;
 

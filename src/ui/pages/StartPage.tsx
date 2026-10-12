@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Title } from '../components/Title';
 import { ControlsHelp } from '../components/ControlsHelp';
 import { UpdateBanner } from '../components/UpdateBanner';
-import { APP_VERSION } from '../../app/useUpdateCheck';
+import { GIT_SHA } from '../../app/useUpdateCheck';
 
 /** Start page (#/): title, controls help and the FIGHT! button. */
 export function StartPage({ touch, onFight, updateAvailable = false }: { touch: boolean; onFight(): void; updateAvailable?: boolean }) {
@@ -26,7 +26,7 @@ export function StartPage({ touch, onFight, updateAvailable = false }: { touch: 
         <div className="sn-hint stroke">of druk op ENTER / SPATIE</div>
       </div>
       {updateAvailable && <UpdateBanner />}
-      <div className="sn-version">v·{APP_VERSION}</div>
+      <div className="sn-version">v·{GIT_SHA}</div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -42,6 +43,18 @@ function sourceVersion() {
 }
 const APP_VERSION = sourceVersion();
 
+/** Short git commit of the build, shown as the version label; "-dirty" when there are uncommitted changes. */
+function gitVersion() {
+  try {
+    const sha = execSync('git rev-parse --short=10 HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+    const dirty = execSync('git status --porcelain', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim() ? '-dirty' : '';
+    return sha + dirty;
+  } catch {
+    return process.env.GITHUB_SHA?.slice(0, 10) ?? 'unknown';
+  }
+}
+const GIT_SHA = gitVersion();
+
 /** Writes dist/version.json, which the running game polls to detect a newer deploy. */
 function versionFile() {
   return {
@@ -68,7 +81,7 @@ export const preactAliases = [
 export default defineConfig({
   base: './', // works under any GitHub Pages sub-path
   plugins: [viteSingleFile(), fullReloadOnCode(), versionFile()],
-  define: { __APP_VERSION__: JSON.stringify(APP_VERSION) },
+  define: { __APP_VERSION__: JSON.stringify(APP_VERSION), __GIT_SHA__: JSON.stringify(GIT_SHA) },
   resolve: { alias: preactAliases },
   server: {
     watch: isWSL ? { usePolling: true, interval: 150 } : undefined,
