@@ -1,7 +1,8 @@
 // Hidden cheat input. Not mentioned anywhere in the game UI, on purpose.
 // ↑ ↑ ↓ ↓ ← → ← → B A START, where B = KICK, A = PUNCH, START = the pause button.
 // Fed from button-down events (keyboard and touch), so it works on phones too and
-// never misses a quick tap on a slow frame.
+// never misses a quick tap on a slow frame. Also works in the pause menu: pause, enter the
+// code, then START unlocks it (the game stays paused).
 
 import type { Button } from './types';
 

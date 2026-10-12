@@ -111,6 +111,6 @@ push to `main` (Settings → Pages → Source: "GitHub Actions"). Keep `base: '.
 
 ## Hidden cheat (developer note — never surface in the game UI)
 `src/cheats.ts`: ↑ ↑ ↓ ↓ ← → ← → B A START (B = KICK, A = PUNCH, START = pause button /
-P / Esc / Enter) during a fight gives Superneus a knife (`weapon` component, punches ×2),
+P / Esc / Enter) during a fight — also while paused, in the pause menu — gives Superneus a knife (`weapon` component, punches ×2),
 with a "shiiing" sound and SCHHING! popup. Lasts until page reload. Keep it out of the
 controls help, legends and any player-facing text.

@@ -102,7 +102,7 @@ export class GameController {
   /** The START button (pause badge, P / Esc / Enter). Completing the cheat code consumes it. */
   pressStart(): void {
     if (this.phase !== 'fight' && this.phase !== 'intro') return;
-    if (this.cheat.start()) return;
+    if (this.cheat.start()) return; // also while paused: unlocks without resuming
     this.setPaused(!this.state.paused);
   }
 
