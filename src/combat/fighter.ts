@@ -63,13 +63,6 @@ function spawnSpecial(f: Fighter, match: Match): void {
   } });
 }
 
-// Is the fighter currently threatened (so holding back shows a block stance)?
-function threatened(f: Fighter, opp: Fighter, match: Match): boolean {
-  const d = Math.abs(opp.x - f.x);
-  if (isAttackState(opp.state) && opp.attackPhase !== 'recovery' && d < 320) return true;
-  return match.queries.projectiles.entities.some(({ projectile: p }) => p.owner !== f.id && Math.abs(p.x - f.x) < 280 && Math.sign(p.vx || 1) === Math.sign(f.x - p.x));
-}
-
 /** Advance one fighter by dt using a held input snapshot. */
 export function updateFighter(f: Fighter, opp: Fighter, input: Readonly<Input>, dt: number, match: Match, events: GameEvent[]): void {
   const prev = f.prevInput;
@@ -80,9 +73,8 @@ export function updateFighter(f: Fighter, opp: Fighter, input: Readonly<Input>, 
 
   const air = isAirborne(f);
   const toward = (Math.sign(opp.x - f.x) || f.facing) as 1 | -1;
-  const backKey: keyof Input = toward > 0 ? 'left' : 'right';
-  const fwdKey: keyof Input = toward > 0 ? 'right' : 'left';
-  f.holdBack = (!!input[backKey] && !input[fwdKey]) || input.block;
+  // only the block button guards; walking backwards alone doesn't
+  f.holdBack = input.block;
 
   // --- state logic ---
   if (f.state === 'ko') {
@@ -95,7 +87,7 @@ export function updateFighter(f: Fighter, opp: Fighter, input: Readonly<Input>, 
   } else if (f.state === 'block') {
     f.stun -= dt;
     f.crouching = !!input.down;
-    if (f.stun <= 0 && !input.block && !(f.holdBack && threatened(f, opp, match))) setState(f, 'idle');
+    if (f.stun <= 0 && !input.block) setState(f, 'idle');
   } else if (isAttackState(f.state)) {
     const m = MOVES[f.move!];
     f.attackPhase = phaseOf(m, f.stateTime);
@@ -124,11 +116,13 @@ export function updateFighter(f: Fighter, opp: Fighter, input: Readonly<Input>, 
     f.facing = toward;
     f.crouching = !!input.down;
     const canSpecial = f.specialMeter >= COMBAT.maxMeter;
-    if (pressed('special') && canSpecial) {
+    // block and attack are exclusive: while the block button is held, attack presses are ignored
+    const canAttack = !input.block;
+    if (canAttack && pressed('special') && canSpecial) {
       startAttack(f, 'special', events);
-    } else if (pressed('kick')) {
+    } else if (canAttack && pressed('kick')) {
       startAttack(f, f.crouching ? 'crouchKick' : 'kick', events);
-    } else if (pressed('punch')) {
+    } else if (canAttack && pressed('punch')) {
       startAttack(f, f.crouching ? 'crouchPunch' : 'punch', events);
     } else if (input.up && !f.crouching) {
       const h = (input.right ? 1 : 0) - (input.left ? 1 : 0);
@@ -136,7 +130,7 @@ export function updateFighter(f: Fighter, opp: Fighter, input: Readonly<Input>, 
       f.airAttackUsed = false; f.crouching = false;
       setState(f, 'jump'); f.attackPhase = null;
       events.push({ type: 'jump', who: f.id });
-    } else if (input.block || (f.holdBack && threatened(f, opp, match))) {
+    } else if (input.block) {
       setState(f, 'block'); f.vx = 0; f.walkDir = 0;
     } else if (f.crouching) {
       setState(f, 'crouch'); f.vx = 0; f.walkDir = 0;

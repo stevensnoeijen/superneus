@@ -36,6 +36,17 @@ describe('fighter movement', () => {
     expect(m.p1.crouching).toBe(true);
   });
 
+  it('walking backwards alone does not block', () => {
+    const { m } = step({ ...IDLE, left: true }, 10);
+    expect(m.p1.holdBack).toBe(false);
+    expect(m.p1.state).toBe('walk');
+  });
+
+  it('attacks are ignored while the block button is held', () => {
+    const { m } = step({ ...IDLE, block: true, punch: true }, 10);
+    expect(m.p1.state).toBe('block');
+  });
+
   it('the block button guards even without a threat, and stands still', () => {
     const { m } = step({ ...IDLE, block: true }, 10);
     expect(m.p1.state).toBe('block');

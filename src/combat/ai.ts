@@ -143,7 +143,7 @@ export function updateAI(ai: AIState, me: Fighter, foe: Fighter, dt: number): In
 
   const input: Input = { left: false, right: false, up: false, down: false, punch: false, kick: false, special: false, block: false };
   if (ai.t < ai.holdUntil) Object.assign(input, ai.hold);
-  if (ai.t < ai.blockUntil) { input[backKey] = true; input[fwdKey] = false; input.up = false; }
+  if (ai.t < ai.blockUntil) { input.block = true; input.up = false; }
   if (ai.press && ai.t < ai.pressUntil) input[ai.press] = true;
   else ai.press = null;
   return input;
