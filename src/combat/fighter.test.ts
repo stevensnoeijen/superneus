@@ -48,6 +48,15 @@ describe('fighter rules', () => {
     expect(ev[0]).toMatchObject({ blocked: true });
   });
 
+  it('an attacking fighter cannot block', () => {
+    const m = createMatch();
+    m.p2.holdBack = true; m.p2.state = 'punch';
+    const ev: GameEvent[] = [];
+    applyHit(m, m.p1, m.p2, 'kick', MOVES.kick, 400, 100, ev);
+    expect(m.p2.state).toBe('hit');
+    expect(ev[0]).toMatchObject({ blocked: false });
+  });
+
   it('a lethal hit ends the match with a KO', () => {
     const m = createMatch();
     m.p2.health = 3;

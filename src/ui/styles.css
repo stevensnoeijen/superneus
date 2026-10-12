@@ -333,9 +333,22 @@
 .sn-paused { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
   background: rgba(40, 0, 60, .45); }
 .sn-paused-card { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; transform: rotate(-3deg); }
-.sn-paused-card b { font-family: var(--font-title); font-weight: normal; font-size: clamp(48px, min(14vw, 18vh), 120px); color: var(--title-top);
+.sn-paused-card > b { font-family: var(--font-title); font-weight: normal; font-size: clamp(48px, min(14vw, 18vh), 120px); color: var(--title-top);
   -webkit-text-stroke: 3px var(--title-line); paint-order: stroke fill; text-shadow: var(--title-extrude); line-height: 1; }
+.sn-paused { overflow: hidden; }
+.sn-paused-help { width: min(640px, 92vw); transform: rotate(3deg); }
+/* never scroll: drop the help when the screen is too short to fit it next to the buttons */
+@media (max-height: 640px) { .sn-paused-help { display: none; } }
+@media (max-width: 500px) and (max-height: 800px) { .sn-paused-help { display: none; } }
 .sn-btn.small { font-size: clamp(22px, min(5vw, 6vh), 36px); padding: 4px 26px; }
+
+/* small key legend, bottom right during a desktop fight */
+.sn-keys-mini { position: absolute; right: 10px; bottom: 10px; margin: 0; padding: 6px 10px; list-style: none; pointer-events: none;
+  display: grid; gap: 3px; font-family: var(--font); font-size: 12px; text-transform: none; color: var(--ink);
+  background: rgba(255, 255, 255, .8); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); opacity: .85; }
+.sn-keys-mini kbd { display: inline-block; min-width: 1.4em; text-align: center; font-family: var(--font);
+  background: var(--yellow); border: 2px solid var(--ink); border-radius: 3px; padding: 0 3px; }
+@media (max-height: 420px), (max-width: 600px) { .sn-keys-mini { display: none; } }
 
 /* ---------- Pages + transitions ---------- */
 .sn-fx { position: absolute; inset: 0; pointer-events: none; }

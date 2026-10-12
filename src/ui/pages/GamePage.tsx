@@ -4,6 +4,7 @@ import { Hud, type HudHandle } from '../components/Hud';
 import { TouchControls, type TouchControlsHandle } from '../components/TouchControls';
 import { FxLayer, type FxHandle } from '../components/FxLayer';
 import { PauseOverlay } from '../components/PauseOverlay';
+import { KeysMini } from '../components/ControlsHelp';
 import { GameOverModal } from '../components/GameOverModal';
 import { UpdateBanner } from '../components/UpdateBanner';
 
@@ -67,8 +68,9 @@ export function GamePage({ touch, muted, onToggleMute, onMenu, updateAvailable =
     <div className="sn-page sn-game">
       <Hud ref={hud} paused={paused} muted={muted} onPause={() => game.pressStart()} onToggleMute={onToggleMute} />
       <FxLayer ref={fx} />
+      {!touch && !paused && !result && <KeysMini />}
       {touch && !result && <TouchControls ref={pads} input={input} />}
-      {paused && <PauseOverlay onResume={() => game.setPaused(false)} onMenu={onMenu} />}
+      {paused && <PauseOverlay touch={touch} onResume={() => game.setPaused(false)} onMenu={onMenu} />}
       {result && <GameOverModal playerWon={result.playerWon} onRestart={() => game.startMatch()} onMenu={onMenu} />}
       {/* never during play (not even paused): only on the K.O. screen */}
       {updateAvailable && result && <UpdateBanner />}
