@@ -333,7 +333,7 @@
 .sn-paused { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
   background: rgba(40, 0, 60, .45); }
 .sn-paused-card { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; transform: rotate(-3deg); }
-.sn-paused-card b { font-family: var(--font-title); font-weight: normal; font-size: clamp(48px, min(14vw, 18vh), 120px); color: var(--title-top);
+.sn-paused-card > b { font-family: var(--font-title); font-weight: normal; font-size: clamp(48px, min(14vw, 18vh), 120px); color: var(--title-top);
   -webkit-text-stroke: 3px var(--title-line); paint-order: stroke fill; text-shadow: var(--title-extrude); line-height: 1; }
 .sn-paused { overflow: hidden; }
 .sn-paused-help { width: min(640px, 92vw); transform: rotate(3deg); }
