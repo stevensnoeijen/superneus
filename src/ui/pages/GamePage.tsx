@@ -68,7 +68,7 @@ export function GamePage({ touch, muted, onToggleMute, onMenu, updateAvailable =
       <Hud ref={hud} paused={paused} muted={muted} onPause={() => game.pressStart()} onToggleMute={onToggleMute} />
       <FxLayer ref={fx} />
       {touch && !result && <TouchControls ref={pads} input={input} />}
-      {paused && <PauseOverlay onResume={() => game.setPaused(false)} onMenu={onMenu} />}
+      {paused && <PauseOverlay touch={touch} onResume={() => game.setPaused(false)} onMenu={onMenu} />}
       {result && <GameOverModal playerWon={result.playerWon} onRestart={() => game.startMatch()} onMenu={onMenu} />}
       {/* never during play (not even paused): only on the K.O. screen */}
       {updateAvailable && result && <UpdateBanner />}

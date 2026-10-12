@@ -64,6 +64,7 @@ describe('modals', () => {
     fireEvent.click(screen.getByText('MENU'));
     expect(onResume).toHaveBeenCalledOnce();
     expect(onMenu).toHaveBeenCalledOnce();
+    expect(screen.getByText('Besturing')).toBeTruthy();
   });
 });
 

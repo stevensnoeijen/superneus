@@ -335,6 +335,9 @@
 .sn-paused-card { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; transform: rotate(-3deg); }
 .sn-paused-card b { font-family: var(--font-title); font-weight: normal; font-size: clamp(48px, min(14vw, 18vh), 120px); color: var(--title-top);
   -webkit-text-stroke: 3px var(--title-line); paint-order: stroke fill; text-shadow: var(--title-extrude); line-height: 1; }
+.sn-paused-card { max-height: 100%; overflow-y: auto; padding: 8px 16px; box-sizing: border-box; }
+.sn-paused-help { width: min(640px, 92vw); transform: rotate(3deg); }
+@media (max-height: 420px) { .sn-paused-help { display: none; } }
 .sn-btn.small { font-size: clamp(22px, min(5vw, 6vh), 36px); padding: 4px 26px; }
 
 /* ---------- Pages + transitions ---------- */
