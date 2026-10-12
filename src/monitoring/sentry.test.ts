@@ -10,7 +10,7 @@ vi.mock('@sentry/browser', () => ({
 }));
 
 const Sentry = await import('@sentry/browser');
-const { initSentry, filterEvent, BUNDLE_URL } = await import('./sentry');
+const { initSentry, filterEvent, sentryEnvironment, BUNDLE_URL } = await import('./sentry');
 
 const PAGE = 'https://stevensnoeijen.github.io/superneus/#/fight';
 
@@ -24,18 +24,18 @@ function event(value: string, files: string[]): ErrorEvent {
 describe('initSentry', () => {
   beforeEach(() => vi.mocked(Sentry.init).mockClear());
 
-  it('does nothing in dev/test', () => {
-    expect(initSentry({ prod: false, dsn: 'https://k@example.ingest.sentry.io/1' })).toBe(false);
+  it('does nothing in tests', () => {
+    expect(initSentry({ mode: 'test', dsn: 'https://k@example.ingest.sentry.io/1', hostname: 'localhost' })).toBe(false);
     expect(Sentry.init).not.toHaveBeenCalled();
   });
 
-  it('initialises in production with the app version as release and no PII', () => {
-    expect(initSentry({ prod: true, dsn: 'https://k@example.ingest.sentry.io/1' })).toBe(true);
+  it('initialises the deployed build as prod with the app version as release and no PII', () => {
+    expect(initSentry({ mode: 'production', dsn: 'https://k@example.ingest.sentry.io/1', hostname: 'stevensnoeijen.github.io' })).toBe(true);
     const opts = vi.mocked(Sentry.init).mock.calls[0]![0]!;
     expect(opts).toMatchObject({
       dsn: 'https://k@example.ingest.sentry.io/1',
       release: 'test-version',
-      environment: 'production',
+      environment: 'prod',
       sampleRate: 1,
       dataCollection: { userInfo: false },
     });
@@ -43,12 +43,25 @@ describe('initSentry', () => {
   });
 
   it('falls back to the committed public DSN', () => {
-    initSentry({ prod: true, dsn: undefined });
+    initSentry({ mode: 'development', dsn: undefined, hostname: 'localhost' });
     expect(vi.mocked(Sentry.init).mock.calls[0]![0]!.dsn).toMatch(/ingest\.de\.sentry\.io/);
   });
 });
 
+describe('sentryEnvironment', () => {
+  it('is prod only for a production build on a public host', () => {
+    expect(sentryEnvironment('production', 'stevensnoeijen.github.io')).toBe('prod');
+    expect(sentryEnvironment('production', 'localhost')).toBe('localhost'); // npm run preview
+    expect(sentryEnvironment('development', 'localhost')).toBe('localhost');
+    expect(sentryEnvironment('development', '192.168.1.20')).toBe('localhost'); // phone on LAN
+  });
+});
+
 describe('filterEvent', () => {
+  it('keeps dev server module frames', () => {
+    expect(filterEvent(event('boom', ['http://localhost:5173/src/main.tsx']), 'http://localhost:5173/#/')).not.toBeNull();
+  });
+
   it('drops ResizeObserver noise', () => {
     expect(filterEvent(event('ResizeObserver loop limit exceeded', []), PAGE)).toBeNull();
   });

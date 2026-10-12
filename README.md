@@ -6,8 +6,9 @@ Vite into one self-contained `index.html`. See `CLAUDE.md` for development notes
 ## Privacy: error reporting
 
 The deployed game reports crashes and JavaScript errors to [Sentry](https://sentry.io)
-(EU region), so bugs on players' devices become visible. Only production builds report;
-development and tests never do.
+(EU region), so bugs on players' devices become visible. Sentry environments: `prod` for
+the deployed game (GitHub Pages) and `localhost` for the dev server / local preview
+(including phones on the LAN). Unit tests never report.
 
 What a report contains: the error message and stack trace, the game version, browser and
 OS, touch vs. desktop, the graphics renderer, screen pixel ratio / canvas size, and recent

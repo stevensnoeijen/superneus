@@ -1,4 +1,5 @@
-// Error/crash reporting with Sentry, production builds only (see README "Privacy").
+// Error/crash reporting with Sentry (see README "Privacy"); environments 'prod'
+// (GitHub Pages) and 'localhost' (dev server / local preview), never in tests.
 // The SDK is bundled (no CDN loader). Tracing and Session Replay are off: bundle size,
 // quota and privacy. Everything here is a safe no-op when Sentry isn't initialised.
 import * as Sentry from '@sentry/browser';
@@ -16,8 +17,18 @@ const NOISE = [/ResizeObserver loop/i, /^Script error\.?$/i, /Non-Error promise 
 const EXTENSION = /^(chrome|moz|safari(-web)?|ms-browser)-extension:\/\//;
 
 interface Env {
-  prod: boolean;
+  mode: string; // Vite mode: 'development' (npm run dev), 'production' (build), 'test' (vitest)
   dsn: string | undefined;
+  hostname: string;
+}
+
+/** localhost, loopback and LAN addresses (phones testing `npm run dev --host`). */
+const LOCAL_HOST = /^(localhost|127\.|\[?::1\]?$|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)|\.local$/;
+
+/** Sentry environment: 'prod' for the deployed build (GitHub Pages), 'localhost' for the
+ *  dev server and local `npm run preview`. */
+export function sentryEnvironment(mode: string, hostname: string): 'prod' | 'localhost' {
+  return mode === 'production' && !LOCAL_HOST.test(hostname) ? 'prod' : 'localhost';
 }
 
 /** Page URL without query/hash/`index.html`: frames from it are our inlined bundle. */
@@ -38,8 +49,10 @@ export function filterEvent(event: ErrorEvent, href: string): ErrorEvent | null 
       const file = frame.filename ?? '';
       if (!file || file === '<anonymous>' || file === '[native code]') continue;
       if (pageBase(file) === base) {
-        frame.filename = BUNDLE_URL;
+        frame.filename = BUNDLE_URL; // the inlined production bundle
         ours = true;
+      } else if (new URL(file, href).origin === new URL(href).origin) {
+        ours = true; // dev server modules (/src/…)
       } else {
         foreign = true;
         if (EXTENSION.test(file)) return null;
@@ -52,14 +65,14 @@ export function filterEvent(event: ErrorEvent, href: string): ErrorEvent | null 
 }
 
 export function initSentry(
-  env: Env = { prod: import.meta.env.PROD, dsn: import.meta.env.VITE_SENTRY_DSN as string | undefined },
+  env: Env = { mode: import.meta.env.MODE, dsn: import.meta.env.VITE_SENTRY_DSN as string | undefined, hostname: location.hostname },
 ): boolean {
   const dsn = env.dsn || PUBLIC_DSN;
-  if (!env.prod || !dsn) return false;
+  if (env.mode === 'test' || !dsn) return false;
   Sentry.init({
     dsn,
     release: __APP_VERSION__,
-    environment: 'production',
+    environment: sentryEnvironment(env.mode, env.hostname),
     sampleRate: 1,
     dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false },
     beforeSend: (event) => filterEvent(event, location.href),

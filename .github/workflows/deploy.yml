@@ -41,7 +41,7 @@ jobs:
           SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
         with:
           release: ${{ steps.version.outputs.version }}
-          environment: production
+          environment: prod
           sourcemaps: dist
           url_prefix: 'app:///'
           inject: false # debug IDs only fit separate .js files; frames are rewritten in beforeSend
