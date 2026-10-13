@@ -78,7 +78,17 @@ export function initSentry(
     beforeSend: (event) => filterEvent(event, location.href),
     // User feedback form; no floating button (it would cover the fight), opened from
     // the start page via openFeedback().
-    integrations: [Sentry.feedbackIntegration({ colorScheme: 'system', autoInject: false, showBranding: false })],
+    integrations: [Sentry.feedbackIntegration({
+      colorScheme: 'system',
+      autoInject: false,
+      showBranding: false,
+      // general feedback, not only bug reports (Sentry's default wording)
+      formTitle: 'Give feedback',
+      messageLabel: 'Feedback',
+      messagePlaceholder: 'What do you like, what bugs you, what would you change?',
+      submitButtonLabel: 'Send feedback',
+      successMessageText: 'Thanks for your feedback!',
+    })],
   });
   Sentry.setTag('build', __APP_VERSION__); // content hash used by the update check
   return true;
