@@ -384,3 +384,6 @@
 @keyframes sn-update-in { from { transform: translateX(-50%) translateY(-160%) rotate(-2deg); } }
 .sn-version { position: absolute; right: 10px; bottom: calc(env(safe-area-inset-bottom) + 6px); font-size: 12px;
   font-family: ui-monospace, monospace; text-transform: none; color: rgba(255,255,255,.75); pointer-events: none; }
+.sn-feedback { position: absolute; left: 10px; bottom: calc(env(safe-area-inset-bottom) + 6px); padding: 4px 10px;
+  font: inherit; font-size: 14px; color: #111; background: #ffd23f; border: 3px solid #111; border-radius: 8px;
+  box-shadow: 3px 3px 0 #111; cursor: pointer; }

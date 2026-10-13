@@ -76,6 +76,9 @@ export function initSentry(
     sampleRate: 1,
     dataCollection: { userInfo: false, cookies: false, httpHeaders: false, urlQueryParams: false },
     beforeSend: (event) => filterEvent(event, location.href),
+    // User feedback form; no floating button (it would cover the fight), opened from
+    // the start page via openFeedback().
+    integrations: [Sentry.feedbackIntegration({ colorScheme: 'system', autoInject: false, showBranding: false })],
   });
   Sentry.setTag('build', __APP_VERSION__); // content hash used by the update check
   return true;
@@ -93,4 +96,14 @@ export function breadcrumb(category: string, message: string): void {
 /** Reports a caught error with extra context (e.g. a failed load/engine init). */
 export function reportError(err: unknown, context: Record<string, unknown>): void {
   Sentry.captureException(err, { contexts: { game: context } });
+}
+
+/** Opens Sentry's user feedback form. Returns false when Sentry isn't initialised. */
+export async function openFeedback(): Promise<boolean> {
+  const feedback = Sentry.getFeedback();
+  if (!feedback) return false;
+  const form = await feedback.createForm();
+  form.appendToDom();
+  form.open();
+  return true;
 }
