@@ -3,12 +3,13 @@ import { Title } from '../components/Title';
 import { ControlsHelp } from '../components/ControlsHelp';
 import { UpdateBanner } from '../components/UpdateBanner';
 import { GIT_SHA } from '../../app/useUpdateCheck';
-import { openFeedback } from '../../monitoring/sentry';
+import { isTyping, openFeedback } from '../../monitoring/sentry';
 
 /** Start page (#/): title, controls help and the FIGHT! button. */
 export function StartPage({ touch, onFight, updateAvailable = false }: { touch: boolean; onFight(): void; updateAvailable?: boolean }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (isTyping(e)) return;
       if (e.code !== 'Enter' && e.code !== 'NumpadEnter' && e.code !== 'Space') return;
       e.preventDefault();
       if (!e.repeat) onFight();

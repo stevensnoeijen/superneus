@@ -98,6 +98,13 @@ export function reportError(err: unknown, context: Record<string, unknown>): voi
   Sentry.captureException(err, { contexts: { game: context } });
 }
 
+/** True when a key event comes from a text field (also inside the feedback form's
+ *  shadow DOM), so game/page shortcuts leave it alone. */
+export function isTyping(e: Event): boolean {
+  const el = e.composedPath()[0];
+  return el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
+}
+
 /** Opens Sentry's user feedback form. Returns false when Sentry isn't initialised. */
 export async function openFeedback(): Promise<boolean> {
   const feedback = Sentry.getFeedback();
