@@ -1,4 +1,5 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { isTyping } from '../../monitoring/sentry';
 import { useServices } from '../../app/services';
 import { Hud, type HudHandle } from '../components/Hud';
 import { TouchControls, type TouchControlsHandle } from '../components/TouchControls';
@@ -37,7 +38,7 @@ export function GamePage({ touch, muted, onToggleMute, onMenu, updateAvailable =
   // keyboard: K.O. screen confirm, START/pause, then the game buttons
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.ctrlKey || e.metaKey || e.altKey || isTyping(e)) return;
       audio.unlock(); // in case the page was opened directly on #/fight
       if (game.getState().result) {
         if (CONFIRM_KEYS.has(e.code)) { e.preventDefault(); if (!e.repeat) game.startMatch(); }
@@ -46,7 +47,7 @@ export function GamePage({ touch, muted, onToggleMute, onMenu, updateAvailable =
       if (PAUSE_KEYS.has(e.code)) { e.preventDefault(); if (!e.repeat) game.pressStart(); return; }
       if (input.keyDown(e.code, e.repeat) || e.code === 'Space') e.preventDefault();
     };
-    const up = (e: KeyboardEvent) => { if (input.keyUp(e.code)) e.preventDefault(); };
+    const up = (e: KeyboardEvent) => { if (!isTyping(e) && input.keyUp(e.code)) e.preventDefault(); };
     const release = () => input.clear();
     const onVisibility = () => { if (document.hidden) release(); };
     const unlock = () => audio.unlock();

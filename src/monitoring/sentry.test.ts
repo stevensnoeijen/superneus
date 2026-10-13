@@ -7,6 +7,8 @@ vi.mock('@sentry/browser', () => ({
   setTags: vi.fn(),
   addBreadcrumb: vi.fn(),
   captureException: vi.fn(),
+  feedbackIntegration: vi.fn(() => ({ name: 'Feedback' })),
+  getFeedback: vi.fn(),
 }));
 
 const Sentry = await import('@sentry/browser');
@@ -77,5 +79,13 @@ describe('filterEvent', () => {
   it('keeps game errors and points frames at the uploaded source map', () => {
     const out = filterEvent(event('boom', ['https://stevensnoeijen.github.io/superneus/index.html?perf']), PAGE);
     expect(out?.exception?.values?.[0]?.stacktrace?.frames?.[0]?.filename).toBe(BUNDLE_URL);
+  });
+});
+
+describe('openFeedback', () => {
+  it('is a no-op without Sentry', async () => {
+    const { openFeedback } = await import('./sentry');
+    vi.mocked(Sentry.getFeedback).mockReturnValue(undefined);
+    expect(await openFeedback()).toBe(false);
   });
 });
