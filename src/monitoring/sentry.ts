@@ -78,7 +78,23 @@ export function initSentry(
     beforeSend: (event) => filterEvent(event, location.href),
     // User feedback form; no floating button (it would cover the fight), opened from
     // the start page via openFeedback().
-    integrations: [Sentry.feedbackIntegration({ colorScheme: 'system', autoInject: false, showBranding: false })],
+    integrations: [Sentry.feedbackIntegration({
+      colorScheme: 'system',
+      autoInject: false,
+      showBranding: false,
+      // general feedback, not only bug reports; Dutch like the rest of the game UI
+      formTitle: 'Geef feedback',
+      nameLabel: 'Naam',
+      namePlaceholder: 'Je naam',
+      emailLabel: 'E-mail',
+      emailPlaceholder: 'jij@voorbeeld.nl',
+      isRequiredLabel: '(verplicht)',
+      messageLabel: 'Feedback',
+      messagePlaceholder: 'Wat vind je leuk, wat zit je dwars, wat zou je veranderen?',
+      submitButtonLabel: 'Verstuur feedback',
+      cancelButtonLabel: 'Annuleren',
+      successMessageText: 'Bedankt voor je feedback!',
+    })],
   });
   Sentry.setTag('build', __APP_VERSION__); // content hash used by the update check
   return true;
